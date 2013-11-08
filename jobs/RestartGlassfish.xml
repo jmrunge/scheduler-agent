@@ -1,0 +1,30 @@
+<job>
+    <time>14:53</time>
+    <vars>
+        <var name="glassfishHome" type="string">C:/glassfish3</var>
+    </vars>
+    <tasks>
+        <task type="executeCmd" abortOnError="true" >
+            <command>{glassfishHome}/bin/asadmin.bat</command>
+            <command>stop-domain</command>
+            <command>domain1</command>
+            <response>stop-domain se ha ejecutado correctamente</response>
+        </task>
+        <task type="executeCmd" abortOnError="true" >
+            <command>{glassfishHome}/bin/asadmin.bat</command>
+            <command>start-domain</command>
+            <command>domain1</command>
+        </task>
+        <task type="sendMail" abortOnError="false" >
+            <title>Glassfish server was succesfully restarted!</title>
+            <sender>tareas@avctv.com.ar</sender>
+            <recipient>jmrunge@avctv.com.ar</recipient>
+            <recipient>jmrunge@gmail.com</recipient>
+            <server>
+                <host>192.168.10.2</host>
+                <port>6543</port>
+            </server>            
+        </task>
+    </tasks>
+    
+</job>

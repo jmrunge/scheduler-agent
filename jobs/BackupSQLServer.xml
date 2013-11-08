@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<job>
+    <time>11:36</time>
+    <vars>
+        <var name="connectUrl" type="string">jdbc:sqlserver://localhost:1433;databaseName=Cipres_AVC_VLA;</var>
+        <var name="dbUser" type="string">sa</var>
+        <var name="dbPassword" type="string">Martin77</var>
+        <var name="storedProcedureName" type="string">spc_backup</var>
+        <var name="successMessage" type="string">El backup ha finalizado correctamente</var>
+        <var name="backupDir" type="string">D:/SQL Backup</var>
+        <var name="daysToKeep" type="string">2</var>
+    </vars>
+    <tasks>
+        <task type="createDir" abortOnError="true" >
+            <dir>{backupDir}</dir>
+        </task>
+        <task type="backupSQLServer" abortOnError="true" >
+            <connectUrl>{connectUrl}</connectUrl>
+            <dbUser>{dbUser}</dbUser>
+            <dbPassword>{dbPassword}</dbPassword>
+            <storedProcedureName>{storedProcedureName}</storedProcedureName>
+            <successMessage>{successMessage}</successMessage>
+        </task>
+        <task type="cleanDir" abortOnError="true" >
+            <dir>{backupDir}</dir>
+            <daysToKeep>{daysToKeep}</daysToKeep>
+        </task>
+        <task type="sendMail" abortOnError="false" >
+            <title>SQL backup executed correctly!</title>
+            <body>DB backups stored into {backupDir}</body>
+            <sender>tareas@avctv.com.ar</sender>
+            <recipient>jmrunge@avctv.com.ar</recipient>
+            <recipient>jmrunge@gmail.com</recipient>
+            <server>
+                <host>192.168.10.2</host>
+                <port>6543</port>
+            </server>            
+        </task>
+    </tasks>
+    
+</job>

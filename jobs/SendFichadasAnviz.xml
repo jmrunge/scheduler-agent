@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<job>
+    <time>10:30</time>
+    <vars>
+        <var name="fechaHoy" format="dd/MM/yyyy" type="date">CURRENT_DATE</var>
+        <var name="destFile" format="yyyyMMddHHmm" type="date">CURRENT_DATE</var>
+        <var name="fromDate" format="yyyy/MM/dd HH:mm:ss" type="date" function="dayAdd(-1)">CURRENT_FIRST_DATE</var>
+        <var name="toDate" format="yyyy/MM/dd HH:mm:ss" type="date" function="dayAdd(-1)">CURRENT_LAST_DATE</var>
+    </vars>
+    <tasks>
+        <task type="readAnvizRecordsToFile" abortOnError="true" >
+            <anviz>
+                <IP>192.168.10.8</IP>
+                <ID>1</ID>
+            </anviz>
+            <range>
+                <from>{fromDate}</from>
+                <to>{toDate}</to>
+            </range>
+            <file path="/tmp/{destFile}.cro"> 
+                <fields>
+                    <field alias="codigo" length="8" start="0" type="string">codigo</field>
+                    <field alias="fecha" length="11" start="8" type="date" format="yyyy/MM/dd">fecha</field>
+                    <field alias="hora" length="6" start="19" type="date" format="HH:mm">hora</field>
+                    <field length="5" start="25" type="string">10 30</field>
+                </fields>
+            </file>
+        </task>
+        <task type="sendMail" abortOnError="false" >
+            <title>Fichadas AVC BRC</title>
+            <body>Envio fichadas del dia {fechaHoy}</body>
+            <sender>tareas@avctv.com.ar</sender>
+            <recipient>jmrunge@avctv.com.ar</recipient>
+            <server>
+                <host>192.168.10.2</host>
+                <port>6543</port>
+            </server>     
+            <attach>
+                <file mime="text/plain">/tmp/{destFile}.cro</file>
+            </attach>
+        </task>
+        <task type="deleteFile" abortOnError="true" >
+            <file>/tmp/{destFile}.cro</file>
+        </task>
+    </tasks>
+</job>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<job>
+    <time>09:25</time>
+    <vars>
+        <var name="dbPath" type="string">//srv-avc-brc/Sistemas/FingerPass/DB/DBHuellas.mdb</var>
+        <var name="fechaHoy" format="dd/MM/yyyy" type="date">CURRENT_DATE</var>
+        <var name="destFile" format="yyyyMMddHHmm" type="date">CURRENT_DATE</var>
+        <var name="fromDate" format="yyyy/MM/dd HH:mm:ss" type="date" function="dayAdd(-1)">CURRENT_FIRST_DATE</var>
+        <var name="toDate" format="yyyy/MM/dd HH:mm:ss" type="date" function="dayAdd(-1)">CURRENT_LAST_DATE</var>
+    </vars>
+    <tasks>
+        <task type="readMDBToFile" abortOnError="true" >
+            <mdb>{dbPath}</mdb>
+            <file path="D:/temp/{destFile}.cro"> 
+                <fields>
+                    <field alias="codigo" length="8" start="0" type="string">codigo</field>
+                    <field alias="fecha" length="11" start="8" type="date" format="yyyy/MM/dd">fecha</field>
+                    <field alias="hora" length="6" start="19" type="date" format="HH:mm">hora</field>
+                    <field length="5" start="25" type="string">10 30</field>
+                </fields>
+            </file>
+            <tables>
+                <table name="Pasadas">
+                    <tableFields>
+                        <tableField alias="fecha">Fecha</tableField>
+                        <tableField alias="hora">Hora</tableField>
+                        <tableField alias="Pasadas.idPersona">IDPersona</tableField>
+                    </tableFields>
+                    <conditions>
+                        <varCondition field="Fecha" operator="greaterEqual" format="yyyy/MM/dd HH:mm:ss">{fromDate}</varCondition>
+                        <varCondition field="Fecha" operator="lessEqual" format="yyyy/MM/dd HH:mm:ss">{toDate}</varCondition>
+                    </conditions>
+                </table>
+                <table name="Personas">
+                    <tableFields>
+                        <tableField alias="codigo">Codigo</tableField>
+                    </tableFields>
+                    <conditions>
+                        <fieldCondition field="IdPersona" operator="equal">Pasadas.idPersona</fieldCondition>
+                    </conditions>
+                </table>
+            </tables>
+        </task>
+        <task type="sendMail" abortOnError="false" >
+            <title>Fichadas AVC BRC</title>
+            <body>Envio fichadas del dia {fechaHoy}</body>
+            <sender>tareas@avctv.com.ar</sender>
+            <recipient>jmrunge@avctv.com.ar</recipient>
+            <server>
+                <host>192.168.10.2</host>
+                <port>6543</port>
+            </server>     
+            <attach>
+                <file mime="text/plain">D:/temp/{destFile}.cro</file>
+            </attach>
+        </task>
+        <task type="deleteFile" abortOnError="true" >
+            <file>D:/temp/{destFile}.cro</file>
+        </task>
+    </tasks>
+</job>

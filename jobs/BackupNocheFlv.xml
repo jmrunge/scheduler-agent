@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<job>
+    <time>11:28</time>
+    <vars>
+        <var name="origFile" type="string">D:/Temp/prueba2.txt</var>
+        <var name="destDir" format="yyyyMMdd" type="date">CURRENT_DATE</var>
+        <var name="destFile1" type="string">D:/tmp/{destDir}/prueba2.txt</var>
+        <var name="destFile2" type="string">D:/tmp2/{destDir}/prueba2.txt</var>
+    </vars>
+    <tasks>
+        <task type="copyFile" abortOnError="true" createDirIfNotExists="true" overwriteFileIfExists="false" >
+            <from>{origFile}</from>
+            <to>{destFile1}</to>
+        </task>
+        <task type="copyFile" abortOnError="true" createDirIfNotExists="true" overwriteFileIfExists="false" >
+            <from>{origFile}</from>
+            <to>{destFile2}</to>
+        </task>
+        <task type="deleteFile" abortOnError="true" >
+            <file>{origFile}</file>
+        </task>
+        <task type="sendMail" abortOnError="false" >
+            <title>Noche.FLV backup executed correctly!</title>
+            <body>{origFile} copied to {destFile1}</body>
+            <body>{origFile} copied to {destFile2}</body>
+            <body>{origFile} deleted</body>
+            <sender>tareas@avctv.com.ar</sender>
+            <recipient>jmrunge@avctv.com.ar</recipient>
+            <recipient>jmrunge@gmail.com</recipient>
+            <server>
+                <host>192.168.10.2</host>
+                <port>6543</port>
+            </server>            
+        </task>
+    </tasks>
+    
+</job>

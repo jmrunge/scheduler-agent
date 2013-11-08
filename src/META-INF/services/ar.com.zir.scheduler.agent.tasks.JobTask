@@ -1,0 +1,8 @@
+ar.com.zir.scheduler.agent.tasks.BackupSqlServerTask
+ar.com.zir.scheduler.agent.tasks.CleanDirTask
+ar.com.zir.scheduler.agent.tasks.CopyFileTask
+ar.com.zir.scheduler.agent.tasks.CreateDirTask
+ar.com.zir.scheduler.agent.tasks.DeleteFileTask
+ar.com.zir.scheduler.agent.tasks.ReadMdbToFileTask
+ar.com.zir.scheduler.agent.tasks.SendMailTask
+ar.com.zir.scheduler.agent.tasks.ExecuteCmdTask
